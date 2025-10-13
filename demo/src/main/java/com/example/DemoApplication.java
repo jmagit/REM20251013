@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,8 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.ioc.AppConfig;
+import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
@@ -20,6 +26,8 @@ import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.Sender;
 
+@EnableAsync
+@EnableScheduling
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
 
@@ -50,7 +58,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner cadenaDeDependencia(ServicioCadenas srv) {
 		return args -> {
 			srv.get().forEach(notify::add);
@@ -99,20 +107,46 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin configurar}") String valor, Rango rango) {
 		return arg -> {
 			System.err.println("Valor inyectado: %s".formatted(valor));
 			System.err.println("Rango inyectado: %s".formatted(rango));
 		};
 	}
-	
-	@EventListener
+
+//	@Bean
+	CommandLineRunner asincrono(Dummy dummy) {
+		return arg -> {
+			var obj = new Dummy();
+			System.err.println(obj.getClass().getCanonicalName());
+			obj.ejecutarTareaSimple(1);
+			obj.ejecutarTareaSimple(2);
+			obj.calcularResultado(10,20,30,40,50).thenAccept (result -> notify.add(result));
+			obj.calcularResultado(1,2,3).thenAccept (result -> notify.add(result));
+			obj.calcularResultado().thenAccept (result -> notify.add(result));
+		};
+	}
+
+//	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
+	void progamado() {
+		if(! notify.hasMessages()) {
+			System.out.println("Han pasado 5 segundos sin mensajes.");
+			return;
+		}
+		System.err.println(" Mensajes pendientes ---------------------------------->");
+		notify.getListado().forEach(System.out::println);
+		notify.clear();
+		System.err.println("<-------------------------------------------------------");
+
+	}
+
+//	@EventListener
 	void receptor(String ev) {
 		System.out.println("----> Evento inteceptado en DemoApplication -> " + ev);
 	}
 	
-	@EventListener
+//	@EventListener
 	void receptor(GenericoEvent ev) {
 		System.err.println("Evento -> Origen: %s Carga: %s".formatted(ev.origen(), ev.carga()));
 	}
