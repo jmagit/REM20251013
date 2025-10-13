@@ -6,12 +6,13 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.example.ioc.NotificationService;
+import com.example.ioc.anotaciones.RepositoryMock;
 import com.example.ioc.contratos.RepositorioCadenas;
 
 import jakarta.annotation.PostConstruct;
 
-//@RepositoryMock
-@Repository
+@RepositoryMock
+//@Repository
 public class RepositorioCadenasMock implements RepositorioCadenas {
 	@Autowired
 	private NotificationService notify;

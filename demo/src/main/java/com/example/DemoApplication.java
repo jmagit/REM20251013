@@ -2,6 +2,7 @@ package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.ioc.AppConfig;
 import com.example.ioc.NotificationService;
+import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
 import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.ServicioCadenas;
@@ -46,7 +48,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-//	@Bean
+	@Bean
 	CommandLineRunner cadenaDeDependencia(ServicioCadenas srv) {
 		return args -> {
 			srv.get().forEach(notify::add);
@@ -61,7 +63,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner contexto() {
 		return arg -> {
 			try (var contexto = new AnnotationConfigApplicationContext(AppConfig.class)) {
@@ -92,6 +94,14 @@ public class DemoApplication implements CommandLineRunner {
 			primario.send("Hola por defecto");
 			local.send("Hola local");
 			remoto.send("Hola remoto");
+		};
+	}
+	
+	@Bean
+	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin configurar}") String valor, Rango rango) {
+		return arg -> {
+			System.err.println("Valor inyectado: %s".formatted(valor));
+			System.err.println("Rango inyectado: %s".formatted(rango));
 		};
 	}
 
