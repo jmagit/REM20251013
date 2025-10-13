@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.example.ioc.AppConfig;
 import com.example.ioc.NotificationService;
-import com.example.ioc.anotaciones.Local;
 import com.example.ioc.anotaciones.Remoto;
 import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.ServicioCadenas;
@@ -60,6 +61,22 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
+	@Bean
+	CommandLineRunner contexto() {
+		return arg -> {
+			try (var contexto = new AnnotationConfigApplicationContext(AppConfig.class)) {
+				var c1 = contexto.getBean(Configuracion.class);
+				var c2 = contexto.getBean(Configuracion.class);
+				System.out.println("c1 = %d".formatted(c1.getNext()));
+				System.out.println("c2 = %d".formatted(c2.getNext()));
+				System.out.println("c1 = %d".formatted(c1.getNext()));
+				System.out.println("c2 = %d".formatted(c2.getNext()));
+				System.out.println("c1 = %d".formatted(c1.getNext()));
+				contexto.getBean(NotificationService.class).getListado().forEach(System.out::println);
+			}
+		};
+	}
+	
 //	@Bean
 	CommandLineRunner porNombre(Sender correo, Sender fichero, Sender twittea) {
 		return arg -> {
@@ -69,7 +86,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner cualificados(@Qualifier("local") Sender local, @Remoto Sender remoto, Sender primario) {
 		return arg -> {
 			primario.send("Hola por defecto");

@@ -1,5 +1,6 @@
 package com.example.ioc.notificaciones;
 
+import java.beans.ConstructorProperties;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -10,9 +11,10 @@ import com.example.ioc.NotificationService;
 public class ConstructorConValores {
 	private final NotificationService notify;
 	
-	public ConstructorConValores(int version, String otroAutor, NotificationService notify) {
+	@ConstructorProperties({"version", "otroAutor"})
+	public ConstructorConValores(int version, String autor, NotificationService notify) {
 		this.notify = notify;
-		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + otroAutor);
+		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + autor);
 	}
 	
 	public void titulo(String tratamiento, String autor) {
