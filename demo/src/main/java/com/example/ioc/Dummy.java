@@ -36,6 +36,9 @@ public class Dummy {
 		}
 		valor = value.toUpperCase();
 	}
+//	public void setControlado() {
+//		valor = null;
+//	}
 
 	public void clearControlado() {
 		valor = null;

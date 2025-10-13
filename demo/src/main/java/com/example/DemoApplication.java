@@ -8,8 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 
 import com.example.ioc.AppConfig;
+import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
@@ -103,6 +105,16 @@ public class DemoApplication implements CommandLineRunner {
 			System.err.println("Valor inyectado: %s".formatted(valor));
 			System.err.println("Rango inyectado: %s".formatted(rango));
 		};
+	}
+	
+	@EventListener
+	void receptor(String ev) {
+		System.out.println("----> Evento inteceptado en DemoApplication -> " + ev);
+	}
+	
+	@EventListener
+	void receptor(GenericoEvent ev) {
+		System.err.println("Evento -> Origen: %s Carga: %s".formatted(ev.origen(), ev.carga()));
 	}
 
 }
