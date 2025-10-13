@@ -1,15 +1,19 @@
 package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.ioc.NotificationService;
+import com.example.ioc.anotaciones.Local;
+import com.example.ioc.anotaciones.Remoto;
 import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
+import com.example.ioc.notificaciones.Sender;
 
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
@@ -41,7 +45,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner cadenaDeDependencia(ServicioCadenas srv) {
 		return args -> {
 			srv.get().forEach(notify::add);
@@ -55,4 +59,23 @@ public class DemoApplication implements CommandLineRunner {
 			
 		};
 	}
+	
+//	@Bean
+	CommandLineRunner porNombre(Sender correo, Sender fichero, Sender twittea) {
+		return arg -> {
+			correo.send("Hola mundo");
+			fichero.send("Hola mundo");
+			twittea.send("Hola mundo");
+		};
+	}
+
+	@Bean
+	CommandLineRunner cualificados(@Qualifier("local") Sender local, @Remoto Sender remoto, Sender primario) {
+		return arg -> {
+			primario.send("Hola por defecto");
+			local.send("Hola local");
+			remoto.send("Hola remoto");
+		};
+	}
+
 }
