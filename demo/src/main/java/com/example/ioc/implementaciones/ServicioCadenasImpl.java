@@ -11,6 +11,7 @@ import com.example.ioc.contratos.Repositorio;
 import com.example.ioc.contratos.RepositorioCadenas;
 import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
+import com.example.aop.anotations.Logged;
 
 @Service
 //@Primary
@@ -43,6 +44,7 @@ public class ServicioCadenasImpl implements ServicioCadenas {
 	}
 
 	@Override
+	@Logged
 	public void modify(String item) {
 		if (item == null || item.trim() == "")
 			throw new IllegalArgumentException("Datos invalidos.");

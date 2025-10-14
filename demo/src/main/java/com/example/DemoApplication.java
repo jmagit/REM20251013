@@ -142,7 +142,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner aop(Configuracion config, Dummy dummy) {
 		return args -> {
 			try {
@@ -161,6 +161,36 @@ public class DemoApplication implements CommandLineRunner {
 			} catch (Exception e) {
 				System.err.println("Error controlado: " + e.getMessage());
 			}
+		};
+	}
+
+	@Bean
+	CommandLineRunner autenticados(ServicioCadenas srv) {
+		return args -> {
+			System.err.println(srv.getClass().getCanonicalName());
+			if(srv instanceof com.example.aop.introductions.Visible v) {
+				System.err.println("Implementa visible");
+				System.err.println(v.isVisible() ? "Es visible" : "No es visible");
+				v.mostrar();
+				System.err.println(v.isVisible() ? "Es visible" : "No es visible");
+				v.ocultar();
+				System.err.println(v.isVisible() ? "Es visible" : "No es visible");
+			} else {
+				System.err.println("No implementa visible");
+			}
+			try {
+				srv.get().forEach(notify::add);
+				srv.add("Hola mundo");
+				notify.add(srv.get(1));
+				srv.modify("modificado");
+			} catch (Exception e) {
+				System.err.println("Desde el consejo: " + e.getMessage());
+			}
+			System.out.println("===================>");
+			notify.getListado().forEach(System.out::println);
+			notify.clear();
+			System.out.println("<===================");
+			
 		};
 	}
 

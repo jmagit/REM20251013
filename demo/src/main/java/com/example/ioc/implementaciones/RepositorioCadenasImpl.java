@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.ioc.NotificationService;
 import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.RepositorioCadenas;
+import com.example.aop.anotations.Logging;
 
 @Repository
 @Profile({"prod", "default"})
@@ -24,6 +25,7 @@ public class RepositorioCadenasImpl implements RepositorioCadenas {
 	}
 
 	@Override
+	@Logging
 	public String load() {
 		var contador = configuracion.getNext();
 		return "Cadena leida de la base de datos. Me han usado " + contador + (contador == 1 ? " vez." : " veces.");
