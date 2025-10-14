@@ -66,7 +66,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 //	@Bean
-	CommandLineRunner cadenaDeDependencia(ServicioCadenas srv) {
+	CommandLineRunner cadenaDeDependencias(ServicioCadenas srv) {
 		return args -> {
 			srv.get().forEach(notify::add);
 			srv.add("Hola mundo");
@@ -166,7 +166,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-//	@Bean
+	@Bean
 	CommandLineRunner autenticados(ServicioCadenas srv, AuthenticationService auth) {
 		return args -> {
 			for (int i = 0; i < 2; i++) {
@@ -175,7 +175,7 @@ public class DemoApplication implements CommandLineRunner {
 				System.err.println("-------> " + (auth.isAuthenticated() ? "Autenticado" : "Anonimo"));
 				try {
 					notify.clear();
-					cadenaDeDependencia(srv).run(args);
+					cadenaDeDependencias(srv).run(args);
 				} catch (Exception e) {
 					System.err.println("Excepcion lanzada desde el consejo: %s -> %s "
 							.formatted(e.getClass().getSimpleName(), e.getMessage()));
@@ -207,7 +207,8 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	@Bean
+	
+//	@Bean
 	CommandLineRunner strictNull(Dummy dummy) {
 		return args -> {
 			try {

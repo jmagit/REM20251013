@@ -10,10 +10,10 @@ public class CommonPointcuts {
 	@Pointcut("execution(public * com.example..*.*(..))")
 	public void cualquierMetodoPublico() {}
 
-	@Pointcut("this(com.example.ioc..RepositorioCadenas)")
+	@Pointcut("this(com.example.ioc.contratos.Repositorio)")
 	public void repositorios() {}
 
-	@Pointcut("this(com.example.ioc..ServicioCadenas)")
+	@Pointcut("this(com.example.ioc.contratos.Servicio)")
 	public void servicios() {}
 
 	@Pointcut("execution(* *.add(..))")

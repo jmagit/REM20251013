@@ -18,6 +18,11 @@ public class AspectoImplAspect {
 	@Pointcut("execution(public * com.example.ioc..*.*(..))")
 	public void miPuntoDeCorte() {
 	}
+//	@Before("miPuntoDeCorte()")
+//	@Order(20)
+//	public void consejoAntesDelMetodo(JoinPoint jp) {
+//		System.err.println(">>> Soy un consejo antesDelMetodo " + jp.getSignature());
+//	}
 
 //	@Before("miPuntoDeCorte()")
 //	@Order(20)
@@ -54,20 +59,20 @@ public class AspectoImplAspect {
 //		return o;
 //	}
 
-	@Around("miPuntoDeCorte()")
-	public Object consejoQueEnvuelveAlMetodo(ProceedingJoinPoint jp) throws Throwable {
-		System.err.println(">>> Soy el previo queEnvuelveAlMetodo " + jp.getSignature());
-		var o = jp.proceed();
-		System.err.println(">>> Soy el posterior queEnvuelveAlMetodo " + jp.getSignature());
-		if(o != null ) {
-			System.err.println(">>> Valor devuelto " + o);
-			if(o instanceof Number v) {
-				System.err.println(">>> Valor calculado " + v.doubleValue() * 2);
-				return v.doubleValue() * 2;
-			}
-		}
-		return o;
-	}
+//	@Around("miPuntoDeCorte()")
+//	public Object consejoQueEnvuelveAlMetodo(ProceedingJoinPoint jp) throws Throwable {
+//		System.err.println(">>> Soy el previo queEnvuelveAlMetodo " + jp.getSignature());
+//		var o = jp.proceed();
+//		System.err.println(">>> Soy el posterior queEnvuelveAlMetodo " + jp.getSignature());
+//		if(o != null ) {
+//			System.err.println(">>> Valor devuelto " + o);
+//			if(o instanceof Number v) {
+//				System.err.println(">>> Valor calculado " + v.doubleValue() * 2);
+//				return v.doubleValue() * 2;
+//			}
+//		}
+//		return o;
+//	}
 
 //	@Around("execution(void com.example.ioc..*.set*(String))")
 //	public void cambiaArgumentos(ProceedingJoinPoint jp) throws Throwable {
