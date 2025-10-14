@@ -34,7 +34,7 @@ public class Dummy {
 		if (value == null || value.trim().isEmpty()) {
 			throw new IllegalArgumentException("Valor no valido");
 		}
-		valor = value.toUpperCase();
+		valor = value; //.toUpperCase();
 	}
 //	public void setControlado() {
 //		valor = null;

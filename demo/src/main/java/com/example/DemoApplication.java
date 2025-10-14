@@ -142,6 +142,28 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
+	@Bean
+	CommandLineRunner aop(Configuracion config, Dummy dummy) {
+		return args -> {
+			try {
+				int v = config.getNext();
+				notify.add("Mensaje " + v + config.getNext());
+				notify.getListado().forEach(System.out::println);
+				config.config();
+			} catch (Exception e) {
+				System.err.println("Desde el consejo: " + e.getMessage());
+			}
+			try {
+				dummy.setControlado(null);
+				System.out.println("Controlado: " + dummy.getControlado().get());
+				dummy.setControlado("minuscula");
+				System.out.println("Controlado: " + dummy.getControlado().get());
+			} catch (Exception e) {
+				System.err.println("Error controlado: " + e.getMessage());
+			}
+		};
+	}
+
 //	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
 	void progamado() {
 		if(! notify.hasMessages()) {
