@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
 import com.example.ioc.contratos.Configuracion;
+import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.Sender;
@@ -104,6 +107,15 @@ public class DemoApplication implements CommandLineRunner {
 			primario.send("Hola por defecto");
 			local.send("Hola local");
 			remoto.send("Hola remoto");
+		};
+	}
+	
+//	@Bean
+	CommandLineRunner cualificados(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
+		return arg -> {
+			senders.forEach(s -> s.send(s.getClass().getCanonicalName()));
+			mapa.forEach((k,v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
+			servicios.forEach(s -> System.out.println(s.getClass().getCanonicalName()));
 		};
 	}
 	
