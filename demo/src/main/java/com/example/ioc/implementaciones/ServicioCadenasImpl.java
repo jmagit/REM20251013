@@ -44,7 +44,7 @@ public class ServicioCadenasImpl implements ServicioCadenas {
 	}
 
 	@Override
-	@Logged
+//	@Logged
 	public void modify(String item) {
 		if (item == null || item.trim() == "")
 			throw new IllegalArgumentException("Datos invalidos.");

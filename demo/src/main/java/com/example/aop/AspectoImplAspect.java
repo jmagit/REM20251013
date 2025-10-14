@@ -54,32 +54,32 @@ public class AspectoImplAspect {
 //		return o;
 //	}
 
-//	@Around("miPuntoDeCorte()")
-//	public Object consejoQueEnvuelveAlMetodo(ProceedingJoinPoint jp) throws Throwable {
-//		System.err.println(">>> Soy el previo queEnvuelveAlMetodo " + jp.getSignature());
-//		var o = jp.proceed();
-//		System.err.println(">>> Soy el posterior queEnvuelveAlMetodo " + jp.getSignature());
-//		if(o != null ) {
-//			System.err.println(">>> Valor devuelto " + o);
-//			if(o instanceof Number v) {
-//				System.err.println(">>> Valor calculado " + v.doubleValue() * 2);
-//				return v.doubleValue() * 2;
-//			}
-//		}
-//		return o;
-//	}
-
-	@Around("execution(void com.example.ioc..*.set*(String))")
-	public void cambiaArgumentos(ProceedingJoinPoint jp) throws Throwable {
+	@Around("miPuntoDeCorte()")
+	public Object consejoQueEnvuelveAlMetodo(ProceedingJoinPoint jp) throws Throwable {
 		System.err.println(">>> Soy el previo queEnvuelveAlMetodo " + jp.getSignature());
-		if (jp.getArgs() != null && jp.getArgs().length > 0 && jp.getArgs()[0] instanceof String v) {
-			System.err.println(">>> Cambiando argumento a mayusculas");
-			jp.proceed(new Object[] { v.toUpperCase() });
-//			jp.proceed();
-		} else {
-			System.err.println(">>> Cambiando argumento vacio a 'Valor por defecto'");
-			jp.proceed(new Object[] { "Valor por defecto" });
+		var o = jp.proceed();
+		System.err.println(">>> Soy el posterior queEnvuelveAlMetodo " + jp.getSignature());
+		if(o != null ) {
+			System.err.println(">>> Valor devuelto " + o);
+			if(o instanceof Number v) {
+				System.err.println(">>> Valor calculado " + v.doubleValue() * 2);
+				return v.doubleValue() * 2;
+			}
 		}
+		return o;
 	}
+
+//	@Around("execution(void com.example.ioc..*.set*(String))")
+//	public void cambiaArgumentos(ProceedingJoinPoint jp) throws Throwable {
+//		System.err.println(">>> Soy el previo queEnvuelveAlMetodo " + jp.getSignature());
+//		if (jp.getArgs() != null && jp.getArgs().length > 0 && jp.getArgs()[0] instanceof String v) {
+//			System.err.println(">>> Cambiando argumento a mayusculas");
+//			jp.proceed(new Object[] { v.toUpperCase() });
+////			jp.proceed();
+//		} else {
+//			System.err.println(">>> Cambiando argumento vacio a 'Valor por defecto'");
+//			jp.proceed(new Object[] { "Valor por defecto" });
+//		}
+//	}
 
 }

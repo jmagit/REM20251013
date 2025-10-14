@@ -25,7 +25,7 @@ public class RepositorioCadenasImpl implements RepositorioCadenas {
 	}
 
 	@Override
-	@Logging
+//	@Logging
 	public String load() {
 		var contador = configuracion.getNext();
 		return "Cadena leida de la base de datos. Me han usado " + contador + (contador == 1 ? " vez." : " veces.");

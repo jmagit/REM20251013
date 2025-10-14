@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.example.aop.AuthenticationService;
+import com.example.aop.introductions.Visible;
 import com.example.ioc.AppConfig;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
@@ -47,7 +49,7 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Autowired
 	NotificationService notify;
-	
+
 //	@Bean
 	CommandLineRunner ioc(Configuracion config) {
 		return args -> {
@@ -62,7 +64,7 @@ public class DemoApplication implements CommandLineRunner {
 			System.out.println(notify.getClass().getCanonicalName());
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner cadenaDeDependencia(ServicioCadenas srv) {
 		return args -> {
@@ -74,10 +76,10 @@ public class DemoApplication implements CommandLineRunner {
 			notify.getListado().forEach(System.out::println);
 			notify.clear();
 			System.out.println("<===================");
-			
+
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner contexto() {
 		return arg -> {
@@ -93,7 +95,7 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner porNombre(Sender correo, Sender fichero, Sender twittea) {
 		return arg -> {
@@ -111,16 +113,16 @@ public class DemoApplication implements CommandLineRunner {
 			remoto.send("Hola remoto");
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner cualificados(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
 		return arg -> {
 			senders.forEach(s -> s.send(s.getClass().getCanonicalName()));
-			mapa.forEach((k,v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
+			mapa.forEach((k, v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
 			servicios.forEach(s -> System.out.println(s.getClass().getCanonicalName()));
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin configurar}") String valor, Rango rango) {
 		return arg -> {
@@ -136,9 +138,9 @@ public class DemoApplication implements CommandLineRunner {
 			System.err.println(obj.getClass().getCanonicalName());
 			obj.ejecutarTareaSimple(1);
 			obj.ejecutarTareaSimple(2);
-			obj.calcularResultado(10,20,30,40,50).thenAccept (result -> notify.add(result));
-			obj.calcularResultado(1,2,3).thenAccept (result -> notify.add(result));
-			obj.calcularResultado().thenAccept (result -> notify.add(result));
+			obj.calcularResultado(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+			obj.calcularResultado(1, 2, 3).thenAccept(result -> notify.add(result));
+			obj.calcularResultado().thenAccept(result -> notify.add(result));
 		};
 	}
 
@@ -164,11 +166,36 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
-	CommandLineRunner autenticados(ServicioCadenas srv) {
+//	@Bean
+	CommandLineRunner autenticados(ServicioCadenas srv, AuthenticationService auth) {
+		return args -> {
+			for (int i = 0; i < 2; i++) {
+				if (i == 1)
+					auth.login();
+				System.err.println("-------> " + (auth.isAuthenticated() ? "Autenticado" : "Anonimo"));
+				try {
+					notify.clear();
+					cadenaDeDependencia(srv).run(args);
+				} catch (Exception e) {
+					System.err.println("Excepcion lanzada desde el consejo: %s -> %s "
+							.formatted(e.getClass().getSimpleName(), e.getMessage()));
+				} finally {
+					if (notify.hasMessages()) {
+						System.out.println("===================>");
+						notify.getListado().forEach(System.out::println);
+						notify.clear();
+						System.out.println("<===================");
+					}
+				}
+			}
+		};
+	}
+
+//	@Bean
+	CommandLineRunner introducciones(ServicioCadenas srv) {
 		return args -> {
 			System.err.println(srv.getClass().getCanonicalName());
-			if(srv instanceof com.example.aop.introductions.Visible v) {
+			if (srv instanceof Visible v) {
 				System.err.println("Implementa visible");
 				System.err.println(v.isVisible() ? "Es visible" : "No es visible");
 				v.mostrar();
@@ -178,25 +205,27 @@ public class DemoApplication implements CommandLineRunner {
 			} else {
 				System.err.println("No implementa visible");
 			}
+		};
+	}
+	@Bean
+	CommandLineRunner strictNull(Dummy dummy) {
+		return args -> {
 			try {
-				srv.get().forEach(notify::add);
-				srv.add("Hola mundo");
-				notify.add(srv.get(1));
-				srv.modify("modificado");
-			} catch (Exception e) {
-				System.err.println("Desde el consejo: " + e.getMessage());
+				dummy.setDescontrolado(null);;
+			} catch (Exception ex) {
+				System.err.println(ex.getMessage());
 			}
-			System.out.println("===================>");
-			notify.getListado().forEach(System.out::println);
-			notify.clear();
-			System.out.println("<===================");
-			
+			try {
+				dummy.getDescontrolado();;
+			} catch (Exception ex) {
+				System.err.println(ex.getMessage());
+			}
 		};
 	}
 
 //	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
 	void progamado() {
-		if(! notify.hasMessages()) {
+		if (!notify.hasMessages()) {
 			System.out.println("Han pasado 5 segundos sin mensajes.");
 			return;
 		}
@@ -211,7 +240,7 @@ public class DemoApplication implements CommandLineRunner {
 	void receptor(String ev) {
 		System.out.println("----> Evento inteceptado en DemoApplication -> " + ev);
 	}
-	
+
 //	@EventListener
 	void receptor(GenericoEvent ev) {
 		System.err.println("Evento -> Origen: %s Carga: %s".formatted(ev.origen(), ev.carga()));
