@@ -166,7 +166,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner autenticados(ServicioCadenas srv, AuthenticationService auth) {
 		return args -> {
 			for (int i = 0; i < 2; i++) {
