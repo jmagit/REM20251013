@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.aop.AuthenticationService;
 import com.example.aop.introductions.Visible;
+import com.example.contracts.domain.repositories.ActorsRepository;
 import com.example.ioc.AppConfig;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
@@ -31,6 +32,7 @@ import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.Sender;
+import com.example.domain.entities.Actor;
 
 @EnableAsync
 @EnableScheduling
@@ -42,9 +44,30 @@ public class DemoApplication implements CommandLineRunner {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
+	@Autowired
+	ActorsRepository dao;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		System.err.println("Apicacion arrancada....");
+		
+		var actor = new Actor(0, "Pepito", "Grillo");
+		var id = dao.save(actor).getId();
+		System.out.println("-----------------------------------------------------------");
+		dao.findAll().forEach(System.out::println);
+		var item = dao.findById(id);
+		if(item.isPresent()) {
+			var a = item.get();
+			a.setFirstName(a.getFirstName().toUpperCase());
+			dao.save(a);
+		} else {
+			System.err.println("No encontrado");
+		}
+		System.out.println("-----------------------------------------------------------");
+		dao.findAll().forEach(System.out::println);
+		dao.deleteById(id);
+		System.out.println("-----------------------------------------------------------");
+		dao.findAll().forEach(System.out::println);
 	}
 
 	@Autowired
