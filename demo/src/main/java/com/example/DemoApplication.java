@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.example.aop.AuthenticationService;
 import com.example.aop.introductions.Visible;
 import com.example.contracts.domain.repositories.ActorsRepository;
+import com.example.contracts.domain.repositories.CategoryRepository;
 import com.example.ioc.AppConfig;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
@@ -33,6 +34,8 @@ import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.Sender;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -52,6 +55,8 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Autowired
 	ActorsRepository dao;
+	@Autowired
+	CategoryRepository daoCategory;
 	
 	@Override
 	@Transactional
@@ -104,8 +109,13 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.findByIdGreaterThanEqual(195).forEach(item -> System.out.println(ActorDTO.from(item)));
 //		dao.queryByIdGreaterThanEqual(195).forEach(System.out::println);
 //		dao.getByIdGreaterThanEqual(195).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
-		dao.searchByIdGreaterThanEqual(195, ActorDTO.class).forEach(System.out::println);
-		dao.searchByIdGreaterThanEqual(195, ActorShort.class).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
+//		dao.searchByIdGreaterThanEqual(195, ActorDTO.class).forEach(System.out::println);
+//		dao.searchByIdGreaterThanEqual(195, ActorShort.class).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
+		var list = daoCategory.findAll();
+		ObjectMapper objectMapper = new ObjectMapper();
+		System.out.println(objectMapper.writeValueAsString(list));
+		var xmlMapper = new XmlMapper();
+		System.out.println(xmlMapper.writeValueAsString(list));
 	}
 
 	@Autowired

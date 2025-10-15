@@ -1,9 +1,22 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 
 /**
@@ -13,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name="category")
 @NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
+@JacksonXmlRootElement(localName = "categorias", namespace = "https://example.com/films")
 public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -22,13 +36,17 @@ public class Category implements Serializable {
 	private int id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@JsonProperty("fecha")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private Timestamp lastUpdate;
 
 	@Column(nullable=false, length=25)
+	@JsonProperty("categoria")
 	private String name;
 
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="category")
+	@JsonIgnore
 	private List<FilmCategory> filmCategories;
 
 	public Category() {
