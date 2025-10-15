@@ -37,6 +37,8 @@ import com.example.ioc.notificaciones.Sender;
 import jakarta.transaction.Transactional;
 
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
 
 @EnableAsync
 @EnableScheduling
@@ -99,7 +101,11 @@ public class DemoApplication implements CommandLineRunner {
 ////			dao.save(actor);
 //			System.out.println("Actor valido");
 //		}
-
+//		dao.findByIdGreaterThanEqual(195).forEach(item -> System.out.println(ActorDTO.from(item)));
+//		dao.queryByIdGreaterThanEqual(195).forEach(System.out::println);
+//		dao.getByIdGreaterThanEqual(195).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
+		dao.searchByIdGreaterThanEqual(195, ActorDTO.class).forEach(System.out::println);
+		dao.searchByIdGreaterThanEqual(195, ActorShort.class).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
 	}
 
 	@Autowired
