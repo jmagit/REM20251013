@@ -78,9 +78,9 @@ public abstract class AbstractEntity<E> {
 		log.debug("PostLoad: " + this.getClass().getSimpleName() + " " + this.toString());
 	}
 
-	@PrePersist
+//	@PrePersist
 	protected void prePersist() {
-		log.debug("PrePersist: " + this.getClass().getSimpleName() + " " + this.toString());
+		log.error("PrePersist: " + this.getClass().getSimpleName() + " " + this.toString());
 		if (isInvalid()) {
 			throw new ConstraintViolationException("Entidad no válida", getErrors());
 		}
