@@ -14,6 +14,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,6 +33,9 @@ import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.Sender;
+
+import jakarta.transaction.Transactional;
+
 import com.example.domain.entities.Actor;
 
 @EnableAsync
@@ -48,26 +52,45 @@ public class DemoApplication implements CommandLineRunner {
 	ActorsRepository dao;
 	
 	@Override
+	@Transactional
 	public void run(String... args) throws Exception {
 		System.err.println("Apicacion arrancada....");
 		
-		var actor = new Actor(0, "Pepito", "Grillo");
-		var id = dao.save(actor).getId();
-		System.out.println("-----------------------------------------------------------");
-		dao.findAll().forEach(System.out::println);
-		var item = dao.findById(id);
+//		var actor = new Actor(0, "Pepito", "Grillo");
+//		var id = dao.save(actor).getId();
+//		System.out.println("-----------------------------------------------------------");
+//		dao.findAll().forEach(System.out::println);
+//		var item = dao.findById(id);
+//		if(item.isPresent()) {
+//			var a = item.get();
+//			a.setFirstName(a.getFirstName().toUpperCase());
+//			dao.save(a);
+//		} else {
+//			System.err.println("No encontrado");
+//		}
+//		System.out.println("-----------------------------------------------------------");
+//		dao.findAll().forEach(System.out::println);
+//		dao.deleteById(id);
+//		System.out.println("-----------------------------------------------------------");
+//		dao.findAll().forEach(System.out::println);
+		
+//		dao.findTop5ByFirstNameStartingWithIgnoreCaseOrderByLastNameDesc("p").forEach(System.out::println);
+//		dao.findTop5ByFirstNameStartingWithIgnoreCase("p", Sort.by("FirstName").ascending()).forEach(System.out::println);
+		
+//		dao.findByIdGreaterThanEqual(200).forEach(System.out::println);
+//		dao.findNovedadesJPQL(200).forEach(System.out::println);
+//		dao.findNovedadesSQL(200).forEach(System.out::println);
+//		dao.findAll((root, query, builder) -> builder.greaterThan(root.get("id"), 200)).forEach(System.out::println);
+//		dao.findAll((root, query, builder) -> builder.lessThanOrEqualTo(root.get("id"), 5)).forEach(System.out::println);
+
+		var item = dao.findById(1);
 		if(item.isPresent()) {
 			var a = item.get();
-			a.setFirstName(a.getFirstName().toUpperCase());
-			dao.save(a);
+			System.out.println(a);
+			a.getFilmActors().forEach(fa -> System.out.println("   -> " + fa.getFilm()));
 		} else {
 			System.err.println("No encontrado");
 		}
-		System.out.println("-----------------------------------------------------------");
-		dao.findAll().forEach(System.out::println);
-		dao.deleteById(id);
-		System.out.println("-----------------------------------------------------------");
-		dao.findAll().forEach(System.out::println);
 	}
 
 	@Autowired
