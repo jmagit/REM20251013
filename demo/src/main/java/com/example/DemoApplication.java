@@ -116,24 +116,24 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.getByIdGreaterThanEqual(195).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
 //		dao.searchByIdGreaterThanEqual(195, ActorDTO.class).forEach(System.out::println);
 //		dao.searchByIdGreaterThanEqual(195, ActorShort.class).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
-		var list = daoCategory.findAll();
-		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println(objectMapper.writeValueAsString(list));
-		var xmlMapper = new XmlMapper();
-		System.out.println(xmlMapper.writeValueAsString(list));
-		srv.getAll((root, query, builder) -> builder.lessThanOrEqualTo(root.get("id"), 5)).forEach(System.out::println);
-		try {
-			srv.add(new Actor(0, "", "PP"));
-		} catch (InvalidDataException e) {
-			System.err.println("Error: " + e.getErrors());
-		}
-		try {
-			srv.modify(new Actor(666, "Xxxx", "PP"));
-		} catch (InvalidDataException e) {
-			System.err.println("Error: " + e.getErrors());
-		} catch (NotFoundException e) {
-			System.err.println(e.getMessage());
-		}
+//		var list = daoCategory.findAll();
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		System.out.println(objectMapper.writeValueAsString(list));
+//		var xmlMapper = new XmlMapper();
+//		System.out.println(xmlMapper.writeValueAsString(list));
+//		srv.getAll((root, query, builder) -> builder.lessThanOrEqualTo(root.get("id"), 5)).forEach(System.out::println);
+//		try {
+//			srv.add(new Actor(0, "", "PP"));
+//		} catch (InvalidDataException e) {
+//			System.err.println("Error: " + e.getErrors());
+//		}
+//		try {
+//			srv.modify(new Actor(666, "Xxxx", "PP"));
+//		} catch (InvalidDataException e) {
+//			System.err.println("Error: " + e.getErrors());
+//		} catch (NotFoundException e) {
+//			System.err.println(e.getMessage());
+//		}
 	}
 
 	@Autowired

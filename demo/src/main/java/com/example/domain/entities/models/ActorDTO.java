@@ -1,5 +1,7 @@
 package com.example.domain.entities.models;
 
+import org.springframework.data.rest.core.config.Projection;
+
 import com.example.domain.entities.Actor;
 
 import lombok.Data;
