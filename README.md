@@ -59,6 +59,12 @@
 
     docker run -d --name artemis -p 1883:1883 -p 5445:5445 -p 5672:5672 -p 8161:8161 -p 9404:9404 -p 61613:61613 -p 61616:61616 jamarton/artemis
 
+### Pruebas
+
+#### Servidor de correo electrónico
+
+    docker run -d --name mailhog -p 1025:1025 -p 8025:8025 mailhog/mailhog
+
 ## Documentación
 
 - <https://docs.spring.io/spring-framework/reference/>

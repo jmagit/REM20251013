@@ -23,6 +23,9 @@ import com.example.aop.AuthenticationService;
 import com.example.aop.introductions.Visible;
 import com.example.contracts.domain.repositories.ActorsRepository;
 import com.example.contracts.domain.repositories.CategoryRepository;
+import com.example.contracts.domain.services.ActorsService;
+import com.example.core.contracts.domain.exceptions.InvalidDataException;
+import com.example.core.contracts.domain.exceptions.NotFoundException;
 import com.example.ioc.AppConfig;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
@@ -57,6 +60,8 @@ public class DemoApplication implements CommandLineRunner {
 	ActorsRepository dao;
 	@Autowired
 	CategoryRepository daoCategory;
+	@Autowired
+	ActorsService srv;
 	
 	@Override
 	@Transactional
@@ -111,11 +116,24 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.getByIdGreaterThanEqual(195).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
 //		dao.searchByIdGreaterThanEqual(195, ActorDTO.class).forEach(System.out::println);
 //		dao.searchByIdGreaterThanEqual(195, ActorShort.class).forEach(item -> System.out.println(item.getId() + " -> " + item.getNombre()));
-		var list = daoCategory.findAll();
-		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println(objectMapper.writeValueAsString(list));
-		var xmlMapper = new XmlMapper();
-		System.out.println(xmlMapper.writeValueAsString(list));
+//		var list = daoCategory.findAll();
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		System.out.println(objectMapper.writeValueAsString(list));
+//		var xmlMapper = new XmlMapper();
+//		System.out.println(xmlMapper.writeValueAsString(list));
+		srv.getAll((root, query, builder) -> builder.lessThanOrEqualTo(root.get("id"), 5)).forEach(System.out::println);
+		try {
+			srv.add(new Actor(0, "", "PP"));
+		} catch (InvalidDataException e) {
+			System.err.println("Error: " + e.getErrors());
+		}
+		try {
+			srv.modify(new Actor(666, "Xxxx", "PP"));
+		} catch (InvalidDataException e) {
+			System.err.println("Error: " + e.getErrors());
+		} catch (NotFoundException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	@Autowired
